@@ -65,9 +65,11 @@ jobs:
           echo "image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Update GitOps repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Clone GitOps repository
-          git clone https://github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
+          # Clone GitOps repository with token
+          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
           cd ${{ secrets.GITOPS_REPOSITORY_NAME }}
           
           # Update image tag in deployment
@@ -78,4 +80,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m "Update image to ${{ github.sha }}" || echo "No changes to commit"
-          git push origin main
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git main
