@@ -1,0 +1,145 @@
+# Kubernetes 관련 파일
+*.kubeconfig
+*.kube
+kubeconfig
+.kube/
+admin.conf
+
+# AWS 관련 파일
+*.pem
+*.key
+*.p12
+*.pfx
+aws-credentials
+.aws/
+
+# Docker 관련 파일
+.dockerignore
+docker-compose.override.yml
+
+# 로그 파일
+*.log
+logs/
+*.out
+*.err
+
+# 임시 파일
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# IDE 관련 파일
+.vscode/
+.idea/
+*.sublime-*
+.atom/
+
+# OS 관련 파일
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Python 관련 파일 (FastAPI)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 가상환경
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# 환경 변수 파일
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 데이터베이스 파일
+*.db
+*.sqlite
+*.sqlite3
+snack101.db
+
+# 백업 파일
+*.bak
+*.backup
+*.old
+
+# 압축 파일
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 설정 파일 (민감한 정보 포함)
+config.yaml
+secrets.yaml
+*.secret
+*.conf.local
+
+# 테스트 관련
+coverage/
+.coverage
+.pytest_cache/
+.tox/
+.nox/
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Node.js (프론트엔드 개발 시)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Helm
+charts/
+Chart.lock
+
+# ArgoCD
+argocd-initial-admin-secret.yaml
+
+# Kubernetes 시크릿
+*-secret.yaml
+*-secrets.yaml
+
+# 로컬 개발 파일
+local/
+dev/
+test/
