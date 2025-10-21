@@ -66,15 +66,18 @@ jobs:
 
       - name: Update GitOps repository
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           # Clone GitOps repository with token
-          git clone https://github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
+          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
           cd ${{ secrets.GITOPS_REPOSITORY_NAME }}
           
           # Configure git to use token for authentication
           git config --local credential.helper store
           echo "https://${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
+          
+          # Set up remote URL with token
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
           
           # Update image tag in deployment
           sed -i "s|image: .*|image: ${{ steps.build-image.outputs.image }}|g" k8s/base/deployment.yaml
