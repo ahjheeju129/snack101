@@ -69,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Clone GitOps repository with token
-          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
+          git clone https://github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
           cd ${{ secrets.GITOPS_REPOSITORY_NAME }}
           
           # Configure git to use token for authentication
