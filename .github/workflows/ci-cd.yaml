@@ -64,26 +64,26 @@ jobs:
           docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
           echo "image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Update GitOps repository
+      - name: Update GitOps repository (with PAT)
         env:
-          GIH_TOKEN: ${{ secrets.GIH_TOKEN }}
-          GITOPS_REPO: ${{ secrets.GITOPS_REPOSITORY_NAME }}
+          GH_PAT: ${{ secrets.GH_PAT }}            # 위에서 만든 PAT
           OWNER: ${{ github.repository_owner }}
+          GITOPS_REPO: ${{ secrets.GITOPS_REPOSITORY_NAME }}
         run: |
           set -euo pipefail
 
-          # 토큰 포함한 URL로 바로 클론 (PAT 사용, 사용자명은 GitHub 로그인 아이디나 $GITHUB_ACTOR 사용)
-          git clone https://${GITHUB_ACTOR}:${GIH_TOKEN}@github.com/${OWNER}/${GITOPS_REPO}.git
+          # PAT는 "토큰 소유자 계정명:토큰" 형식으로 사용해야 합니다.
+          # 반드시 PAT를 만든 GitHub 계정명으로 바꾸세요(예: ahjheeju129)
+          GIT_USER="ahjheeju129"
+
+          git clone "https://${GIT_USER}:${GH_PAT}@github.com/${OWNER}/${GITOPS_REPO}.git"
           cd "${GITOPS_REPO}"
 
-          # 사용자 정보 설정
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
 
-          # 이미지 태그 업데이트
-          sed -i "s|image: .*|image: ${{ steps['build-image'].outputs.image }}|g" k8s/base/deployment.yaml
+          sed -i "s|image: .*|image: ${{ steps.build-image.outputs.image }}|g" k8s/base/deployment.yaml
 
-          # 커밋 & 푸시
           git add -A
           git commit -m "Update image to ${{ github.sha }}" || echo "No changes to commit"
           git push origin main
