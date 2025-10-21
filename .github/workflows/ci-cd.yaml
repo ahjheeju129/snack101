@@ -66,25 +66,24 @@ jobs:
 
       - name: Update GitOps repository
         env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GIH_TOKEN: ${{ secrets.GIH_TOKEN }}
+          GITOPS_REPO: ${{ secrets.GITOPS_REPOSITORY_NAME }}
+          OWNER: ${{ github.repository_owner }}
         run: |
-          # Clone GitOps repository with token
-          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
-          cd ${{ secrets.GITOPS_REPOSITORY_NAME }}
-          
-          # Configure git to use token for authentication
-          git config --local credential.helper store
-          echo "https://${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
-          
-          # Set up remote URL with token
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/${{ secrets.GITOPS_REPOSITORY_NAME }}.git
-          
-          # Update image tag in deployment
-          sed -i "s|image: .*|image: ${{ steps.build-image.outputs.image }}|g" k8s/base/deployment.yaml
-          
-          # Commit and push changes
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
+          set -euo pipefail
+
+          # 토큰 포함한 URL로 바로 클론 (PAT 사용, 사용자명은 GitHub 로그인 아이디나 $GITHUB_ACTOR 사용)
+          git clone https://${GITHUB_ACTOR}:${GIH_TOKEN}@github.com/${OWNER}/${GITOPS_REPO}.git
+          cd "${GITOPS_REPO}"
+
+          # 사용자 정보 설정
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+          # 이미지 태그 업데이트
+          sed -i "s|image: .*|image: ${{ steps['build-image'].outputs.image }}|g" k8s/base/deployment.yaml
+
+          # 커밋 & 푸시
+          git add -A
           git commit -m "Update image to ${{ github.sha }}" || echo "No changes to commit"
           git push origin main
