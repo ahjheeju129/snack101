@@ -9,8 +9,8 @@ from datetime import datetime
 import os
 
 # 데이터베이스 설정
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./snack101.db")
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://snack101user:snack101user@mysql-service:3306/snack101")
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
