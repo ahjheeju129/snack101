@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel
@@ -19,9 +19,9 @@ class SnackReview(Base):
     __tablename__ = "snack_reviews"
     
     id = Column(Integer, primary_key=True, index=True)
-    snack_name = Column(String, index=True)
+    snack_name = Column(String(255), index=True)
     rating = Column(Float)
-    review = Column(String)
+    review = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 # Pydantic 모델
